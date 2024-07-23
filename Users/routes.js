@@ -44,27 +44,31 @@ export default function UserRoutes(app) {
 
     const signup = async (req, res) => {
         const user = await dao.findUserByUsername(req.body.username);
-        if (user) {
-            res.status(400).json(
-                {message: "Username already taken"});
-            return;
-        }
-        const currentUser = await dao.createUser(req.body);
-        req.session["currentUser"] = await dao.createUser(req.body);
-         res.json(currentUser);
+        console.log("user", user)
+        res.json(user)
+        // if (user) {
+        //     res.status(400).json(
+        //         {message: "Username already taken"});
+        //     return;
+        // }
+        // const currentUser = await dao.createUser(req.body);
+        // req.session["currentUser"] = await dao.createUser(req.body);
+        //  res.json(currentUser);
     };
 
     const signin = async (req, res) => {
         const {username, password} = req.body;
         const currentUser = await dao.findUserByCredentials(username, password);
+        // res.json(currentUser)
         if (currentUser) {
+            console.log('SAVING CURRENT USER')
+            console.log(currentUser)
             req.session["currentUser"] = currentUser;
+            console.log(req.sessionID)
             res.json(currentUser);
         } else {
             res.status(401).json({message: "Unable to login. Try again later."});
         }
-
-
     };
     const signout = (req, res) => {
         req.session.destroy();
@@ -72,7 +76,10 @@ export default function UserRoutes(app) {
     };
 
     const profile = (req, res) => {
+        console.log('PROFILE')
         const currentUser = req.session["currentUser"];
+        console.log(req.sessionID)
+        console.log(currentUser)
         if (!currentUser) {
             res.sendStatus(401);
             return;
