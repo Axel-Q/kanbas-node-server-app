@@ -20,12 +20,7 @@ const CONNECTION_STRING = process.env.MONGO_CONNECTION_STRING || "mongodb://127.
 mongoose.connect(CONNECTION_STRING, {useNewUrlParser: true, useUnifiedTopology: true});
 
 const app = express()
-// app.use(cors({
-//         credentials: true,
-//         origin: "http://localhost:3000",
-//
-//     }
-// )); // Enable CORS
+
 
 const allowedOrigins = ["http://localhost:3000", "https://a6--vocal-flan-317e92.netlify.app"];
 
