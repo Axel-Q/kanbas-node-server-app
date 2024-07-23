@@ -44,16 +44,16 @@ export default function UserRoutes(app) {
 
     const signup = async (req, res) => {
         const user = await dao.findUserByUsername(req.body.username);
-        console.log("user", user)
-        res.json(user)
-        // if (user) {
-        //     res.status(400).json(
-        //         {message: "Username already taken"});
-        //     return;
-        // }
-        // const currentUser = await dao.createUser(req.body);
-        // req.session["currentUser"] = await dao.createUser(req.body);
-        //  res.json(currentUser);
+        // console.log("user", user)
+        // res.json(user)
+        if (user) {
+            res.status(400).json(
+                {message: "Username already taken"});
+            return;
+        }
+        const newUser = await dao.createUser(req.body);
+        req.session["currentUser"] = newUser;
+         res.json(newUser);
     };
 
     const signin = async (req, res) => {

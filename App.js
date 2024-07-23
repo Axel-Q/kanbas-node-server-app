@@ -9,11 +9,16 @@ import mongoose from "mongoose";
 import "dotenv/config";
 import UserRoutes from "./Users/routes.js";
 import session from "express-session";
+import MongoStore from "connect-mongo";
 
-//
+
 // const CONNECTION_STRING = process.env.MONGO_CONNECTION_STRING || "mongodb://127.0.0.1:27017/kanbas"
-const CONNECTION_STRING =  "mongodb+srv://qianwangfan:qianwangfan@cluster0.zjpulf9.mongodb.net/kanbas?retryWrites=true&w=majority&appName=Cluster0"
-mongoose.connect(CONNECTION_STRING);
+// // const CONNECTION_STRING =  "mongodb://127.0.0.1:27017/kanbas"
+// mongoose.connect(CONNECTION_STRING);
+
+const CONNECTION_STRING = process.env.MONGO_CONNECTION_STRING || "mongodb://127.0.0.1:27017/kanbas"
+mongoose.connect(CONNECTION_STRING, {useNewUrlParser: true, useUnifiedTopology: true});
+
 const app = express()
 app.use(cors({
         credentials: true,
@@ -24,7 +29,12 @@ const sessionOptions = {
     secret: "any string",
     resave: false,
     saveUninitialized: false,
+    store: MongoStore.create({
+        mongoUrl: CONNECTION_STRING,
+        collectionName: 'sessions',
+    }),
 };
+
 if (process.env.NODE_ENV !== "development") {
     sessionOptions.proxy = true;
     sessionOptions.cookie = {
@@ -37,10 +47,10 @@ if (process.env.NODE_ENV !== "development") {
 app.use(
     session(sessionOptions)
 );
+app.use(express.json());
 
 Hello(app)
 Lab5(app)
-app.use(express.json());
 UserRoutes(app);
 CourseRoutes(app);
 ModuleRoutes(app);
