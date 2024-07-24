@@ -36,7 +36,7 @@ app.use(cors({
 }));
 
 const sessionOptions = {
-    secret: "any string",
+    secret: "super session secret",
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
